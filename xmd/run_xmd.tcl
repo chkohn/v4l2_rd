@@ -1,6 +1,6 @@
 # tcl script to init arm and run sdk
 
-fpga -debugdevice devicenr 2 -f cf_adv7511_zc702.bit
+fpga -debugdevice devicenr 2 -f system.bit
 connect arm hw
 source ps7_init.tcl
 ps7_init
