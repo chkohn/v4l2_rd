@@ -177,7 +177,7 @@ int main() {
 
   init_platform();
   ddr_video_wr();
-  ddr_audio_wr();
+//  ddr_audio_wr();
 
   delay_ms(1);
   data = Xil_In32(CF_CLKGEN_BASEADDR + (0x1f*4));
@@ -203,8 +203,8 @@ int main() {
   Xil_Out32((CFV_BASEADDR + 0x04), 0x00000000); // disable
   Xil_Out32((CFV_BASEADDR + 0x04), 0x00000001); // enable
 
-  Xil_Out32((CFA_BASEADDR + 0x04), 0x040); // sample frequency
-  Xil_Out32((CFA_BASEADDR + 0x00), 0x103); // clock ratio, data enable & signal enable
+//  Xil_Out32((CFA_BASEADDR + 0x04), 0x040); // sample frequency
+//  Xil_Out32((CFA_BASEADDR + 0x00), 0x103); // clock ratio, data enable & signal enable
 
   // wait for hpd
 
@@ -263,17 +263,17 @@ int main() {
 
   Xil_Out32((CFV_BASEADDR + 0x18), 0xff); // clear status
 
-  xil_printf("Generating audio clicks (enter 'q' to quit)\n\r");
-  while (user_exit() == 0) {
-    Xil_Out32((AUDIO_BASEADDR+0x1c), 0x00); // status
-    Xil_Out32((AUDIO_BASEADDR+0x5c), 0x00); // status
-    Xil_DCacheFlush();
-    Xil_Out32((ADMA_BASEADDR + 0x00), 0); // clear dma operations
-    Xil_Out32((ADMA_BASEADDR + 0x08), AUDIO_BASEADDR); // head descr.
-	  Xil_Out32((ADMA_BASEADDR + 0x00), 1); // enable dma operations
-    Xil_Out32((ADMA_BASEADDR + 0x10), (AUDIO_BASEADDR+0x40)); // tail descr.
-    delay_ms(100);
-  }
+//  xil_printf("Generating audio clicks (enter 'q' to quit)\n\r");
+//  while (user_exit() == 0) {
+//    Xil_Out32((AUDIO_BASEADDR+0x1c), 0x00); // status
+//    Xil_Out32((AUDIO_BASEADDR+0x5c), 0x00); // status
+//    Xil_DCacheFlush();
+//    Xil_Out32((ADMA_BASEADDR + 0x00), 0); // clear dma operations
+//    Xil_Out32((ADMA_BASEADDR + 0x08), AUDIO_BASEADDR); // head descr.
+//	  Xil_Out32((ADMA_BASEADDR + 0x00), 1); // enable dma operations
+//    Xil_Out32((ADMA_BASEADDR + 0x10), (AUDIO_BASEADDR+0x40)); // tail descr.
+//    delay_ms(100);
+//  }
 
   xil_printf("done.\n\r");
   cleanup_platform();
