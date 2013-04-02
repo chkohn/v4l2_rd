@@ -22,7 +22,7 @@ HdlLang: VHDL
 SimModel: BEHAVIORAL
 ExternalMemSim: 0
 UcfFile: data/system.ucf
-EnableParTimingError: 1
+EnableParTimingError: 0
 ShowLicenseDialog: 1
 BInfo: 
 Processor: processing_system7_0
