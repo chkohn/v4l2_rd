@@ -117,14 +117,13 @@ BEGIN processing_system7
  PORT DDR_DQS_n = processing_system7_0_DDR_DQS_n
  PORT DDR_VRN = processing_system7_0_DDR_VRN
  PORT DDR_VRP = processing_system7_0_DDR_VRP
- PORT FCLK_CLK0 = processing_system7_0_FCLK_CLK0
- PORT FCLK_CLK1 = processing_system7_0_FCLK_CLK1
- PORT FCLK_CLK2 = processing_system7_0_FCLK_CLK2
- PORT FCLK_RESET0_N = processing_system7_0_FCLK_RESET0_N
- PORT FCLK_RESET1_N = processing_system7_0_FCLK_RESET1_N
- PORT M_AXI_GP0_ACLK = processing_system7_0_FCLK_CLK0
- PORT S_AXI_HP0_ACLK = processing_system7_0_FCLK_CLK1
- PORT S_AXI_HP2_ACLK = processing_system7_0_FCLK_CLK1
+ PORT FCLK_CLK0 = clk_75mhz
+ PORT FCLK_CLK1 = clk_150mhz
+ PORT FCLK_CLK2 = clk_200mhz
+ PORT FCLK_RESET0_N = fclk_rst_0_n
+ PORT M_AXI_GP0_ACLK = clk_75mhz
+ PORT S_AXI_HP0_ACLK = clk_150mhz
+ PORT S_AXI_HP2_ACLK = clk_150mhz
  PORT IRQ_F2P = axi_vdma_0_mm2s_introut & hdmi_int & axi_vdma_1_s2mm_introut
 END
 
@@ -132,24 +131,24 @@ BEGIN axi_interconnect
  PARAMETER INSTANCE = axi_interconnect_gp0
  PARAMETER HW_VER = 1.06.a
  PARAMETER C_INTERCONNECT_CONNECTIVITY_MODE = 1
- PORT INTERCONNECT_ACLK = processing_system7_0_FCLK_CLK0
- PORT INTERCONNECT_ARESETN = processing_system7_0_FCLK_RESET0_N
+ PORT INTERCONNECT_ACLK = clk_75mhz
+ PORT INTERCONNECT_ARESETN = fclk_rst_0_n
 END
 
 BEGIN axi_interconnect
  PARAMETER INSTANCE = axi_interconnect_hp0
  PARAMETER HW_VER = 1.06.a
  PARAMETER C_INTERCONNECT_CONNECTIVITY_MODE = 0
- PORT INTERCONNECT_ACLK = processing_system7_0_FCLK_CLK1
- PORT INTERCONNECT_ARESETN = processing_system7_0_FCLK_RESET1_N
+ PORT INTERCONNECT_ACLK = clk_150mhz
+ PORT INTERCONNECT_ARESETN = fclk_rst_0_n
 END
 
 BEGIN axi_interconnect
  PARAMETER INSTANCE = axi_interconnect_hp2
  PARAMETER HW_VER = 1.06.a
  PARAMETER C_INTERCONNECT_CONNECTIVITY_MODE = 1
- PORT INTERCONNECT_ACLK = processing_system7_0_FCLK_CLK1
- PORT INTERCONNECT_ARESETN = processing_system7_0_FCLK_RESET1_N
+ PORT INTERCONNECT_ACLK = clk_150mhz
+ PORT INTERCONNECT_ARESETN = fclk_rst_0_n
 END
 
 BEGIN axi_vdma
@@ -166,13 +165,13 @@ BEGIN axi_vdma
  BUS_INTERFACE S_AXI_LITE = axi_interconnect_gp0
  BUS_INTERFACE M_AXI_MM2S = axi_interconnect_hp0
  BUS_INTERFACE M_AXIS_MM2S = axi_vdma_0_M_AXIS_MM2S
- PORT m_axis_mm2s_aclk = processing_system7_0_FCLK_CLK1
+ PORT m_axis_mm2s_aclk = clk_150mhz
  PORT mm2s_fsync_out = axi_vdma_0_mm2s_fsync_out
  PORT mm2s_buffer_almost_empty = axi_vdma_0_mm2s_buffer_almost_empty
  PORT mm2s_buffer_empty = axi_vdma_0_mm2s_buffer_empty
  PORT mm2s_fsync = axi_hdmi_tx_16b_0_vdma_fs
- PORT s_axi_lite_aclk = processing_system7_0_FCLK_CLK0
- PORT m_axi_mm2s_aclk = processing_system7_0_FCLK_CLK1
+ PORT s_axi_lite_aclk = clk_75mhz
+ PORT m_axi_mm2s_aclk = clk_150mhz
  PORT mm2s_introut = axi_vdma_0_mm2s_introut
 END
 
@@ -184,14 +183,14 @@ BEGIN axi_hdmi_tx_16b
  PARAMETER C_INTERCONNECT_S_AXI_MASTERS = processing_system7_0.M_AXI_GP0
  BUS_INTERFACE S_AXI = axi_interconnect_gp0
  BUS_INTERFACE M_AXIS_MM2S = axi_vdma_0_M_AXIS_MM2S
- PORT S_AXI_ACLK = processing_system7_0_FCLK_CLK0
+ PORT S_AXI_ACLK = clk_75mhz
  PORT hdmi_ref_clk = axi_hdmi_tx_16b_0_hdmi_ref_clk
  PORT hdmi_clk = axi_hdmi_tx_16b_0_hdmi_clk
  PORT hdmi_data = axi_hdmi_tx_16b_0_hdmi_data
  PORT hdmi_hsync = axi_hdmi_tx_16b_0_hdmi_hsync
  PORT hdmi_vsync = axi_hdmi_tx_16b_0_hdmi_vsync
  PORT hdmi_data_e = axi_hdmi_tx_16b_0_hdmi_data_e
- PORT vdma_clk = processing_system7_0_FCLK_CLK1
+ PORT vdma_clk = clk_150mhz
  PORT vdma_fs = axi_hdmi_tx_16b_0_vdma_fs
  PORT vdma_fs_ret = axi_vdma_0_mm2s_fsync_out
  PORT vdma_empty = axi_vdma_0_mm2s_buffer_empty
@@ -205,8 +204,8 @@ BEGIN axi_clkgen
  PARAMETER C_HIGHADDR = 0x6600ffff
  PARAMETER C_INTERCONNECT_S_AXI_MASTERS = processing_system7_0.M_AXI_GP0
  BUS_INTERFACE S_AXI = axi_interconnect_gp0
- PORT S_AXI_ACLK = processing_system7_0_FCLK_CLK0
- PORT ref_clk = processing_system7_0_FCLK_CLK2
+ PORT S_AXI_ACLK = clk_75mhz
+ PORT ref_clk = clk_200mhz
  PORT clk = axi_hdmi_tx_16b_0_hdmi_ref_clk
 END
 
@@ -244,9 +243,9 @@ BEGIN axi_vdma
  BUS_INTERFACE S_AXI_LITE = axi_interconnect_gp0
  BUS_INTERFACE M_AXI_S2MM = axi_interconnect_hp2
  BUS_INTERFACE S_AXIS_S2MM = v_tpg_M_AXIS_VIDEO
- PORT s_axi_lite_aclk = processing_system7_0_FCLK_CLK0
- PORT m_axi_s2mm_aclk = processing_system7_0_FCLK_CLK1
- PORT s_axis_s2mm_aclk = processing_system7_0_FCLK_CLK1
+ PORT s_axi_lite_aclk = clk_75mhz
+ PORT m_axi_s2mm_aclk = clk_150mhz
+ PORT s_axis_s2mm_aclk = clk_150mhz
  PORT s2mm_introut = axi_vdma_1_s2mm_introut
 END
 
@@ -261,8 +260,8 @@ BEGIN v_tpg
  PARAMETER C_S_AXIS_VIDEO_FORMAT = 2
  BUS_INTERFACE S_AXI = axi_interconnect_gp0
  BUS_INTERFACE M_AXIS_VIDEO = v_tpg_M_AXIS_VIDEO
- PORT aclk = processing_system7_0_FCLK_CLK1
- PORT aresetn = processing_system7_0_FCLK_RESET1_N
- PORT s_axi_aclk = processing_system7_0_FCLK_CLK0
+ PORT aclk = clk_150mhz
+ PORT aresetn = fclk_rst_0_n
+ PORT s_axi_aclk = clk_75mhz
 END
 
