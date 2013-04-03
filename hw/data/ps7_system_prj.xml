@@ -41,7 +41,7 @@
   <set param="PCW::UIPARAM::DDR::BOARD_DELAY2" value="0.464" />
   <set param="PCW::MIO::MIO[1]::SLEW" value="fast" />
   <set param="PCW::WDT::PERIPHERAL::ENABLE" value="1" />
-  <set param="PCW::FPGA0::PERIPHERAL::FREQMHZ" value="100.000000" />
+  <set param="PCW::FPGA0::PERIPHERAL::FREQMHZ" value="75.000000" />
   <set param="PCW::UIPARAM::DDR::BOARD_DELAY3" value="0.521" />
   <set param="PCW::MIO::MIO[4]::IOTYPE" value="LVCMOS 1.8V" />
   <set param="PCW::MIO::MIO[35]::SLEW" value="fast" />
@@ -117,7 +117,7 @@
   <set param="PCW::MIO::MIO[14]::IOTYPE" value="LVCMOS 1.8V" />
   <set param="PCW::MIO::MIO[34]::SLEW" value="fast" />
   <set param="PCW::MIO::MIO[34]::IOTYPE" value="LVCMOS 1.8V" />
-  <set param="PCW::FPGA3::PERIPHERAL::FREQMHZ" value="75.000000" />
+  <set param="PCW::FPGA3::PERIPHERAL::FREQMHZ" value="100.000000" />
   <set param="PCW::MIO::MIO[45]::SLEW" value="fast" />
   <set param="PCW::MIO::MIO[22]::SLEW" value="fast" />
   <set param="PCW::MIO::MIO[22]::IOTYPE" value="HSTL 1.8V" />
