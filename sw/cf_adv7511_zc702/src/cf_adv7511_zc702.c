@@ -11,13 +11,15 @@
 #include "xparameters_ps.h"
 #include "xbasic_types.h"
 #include "xparameters.h"
-#include "cf_adv7511_zc702.h"
+//#include "cf_adv7511_zc702.h"
 
 #define CFV_BASEADDR        XPAR_AXI_HDMI_TX_16B_0_BASEADDR
 #define CFA_BASEADDR        XPAR_AXI_SPDIF_TX_0_BASEADDR
 #define CF_CLKGEN_BASEADDR  XPAR_AXI_CLKGEN_0_BASEADDR
 #define DDR_BASEADDR        XPAR_DDR_MEM_BASEADDR
-#define VDMA_BASEADDR       XPAR_AXI_VDMA_0_BASEADDR
+#define VDMA0_BASEADDR      XPAR_AXI_VDMA_0_BASEADDR
+#define VDMA1_BASEADDR      XPAR_AXI_VDMA_1_BASEADDR
+#define TPG_BASEADDR        XPAR_TPG_0_BASEADDR
 #define ADMA_BASEADDR       XPAR_AXI_DMA_0_BASEADDR
 #define IIC_BASEADDR        XPS_I2C0_BASEADDR
 #define UART_BASEADDR       XPS_UART1_BASEADDR
@@ -122,23 +124,23 @@ u32 iic_read(u32 daddr, u32 raddr, u32 display) {
   return(rdata);
 }
 
-void ddr_video_wr() {
-
-  u32 n;
-  u32 d;
-  u32 dcnt;
-
-  dcnt = 0;
-  xil_printf("DDR write: started (length %d)\n\r", IMG_LENGTH);
-  for (n = 0; n < IMG_LENGTH; n++) {
-    for (d = 0; d < ((IMG_DATA[n]>>24) & 0xff); d++) {
-      Xil_Out32((VIDEO_BASEADDR+(dcnt*4)), (IMG_DATA[n] & 0xffffff));
-      dcnt = dcnt + 1;
-    }
-  }
-  Xil_DCacheFlush();
-  xil_printf("DDR write: completed (total %d)\n\r", dcnt);
-}
+//void ddr_video_wr() {
+//
+//  u32 n;
+//  u32 d;
+//  u32 dcnt;
+//
+//  dcnt = 0;
+//  xil_printf("DDR write: started (length %d)\n\r", IMG_LENGTH);
+//  for (n = 0; n < IMG_LENGTH; n++) {
+//    for (d = 0; d < ((IMG_DATA[n]>>24) & 0xff); d++) {
+//      Xil_Out32((VIDEO_BASEADDR+(dcnt*4)), (IMG_DATA[n] & 0xffffff));
+//      dcnt = dcnt + 1;
+//    }
+//  }
+//  Xil_DCacheFlush();
+//  xil_printf("DDR write: completed (total %d)\n\r", dcnt);
+//}
 
 void ddr_audio_wr() {
 
@@ -176,7 +178,7 @@ int main() {
   u32 data;
 
   init_platform();
-  ddr_video_wr();
+//  ddr_video_wr();
 //  ddr_audio_wr();
 
   delay_ms(1);
@@ -188,13 +190,13 @@ int main() {
 
   iic_select(0x02);
 
-  Xil_Out32((VDMA_BASEADDR + 0x000), 0x00000003); // enable circular mode
-  Xil_Out32((VDMA_BASEADDR + 0x05c), VIDEO_BASEADDR); // start address
-  Xil_Out32((VDMA_BASEADDR + 0x060), VIDEO_BASEADDR); // start address
-  Xil_Out32((VDMA_BASEADDR + 0x064), VIDEO_BASEADDR); // start address
-  Xil_Out32((VDMA_BASEADDR + 0x058), (H_STRIDE*4)); // h offset (2048 * 4) bytes
-  Xil_Out32((VDMA_BASEADDR + 0x054), (H_ACTIVE*4)); // h size (1920 * 4) bytes
-  Xil_Out32((VDMA_BASEADDR + 0x050), V_ACTIVE); // v size (1080)
+  Xil_Out32((VDMA0_BASEADDR + 0x000), 0x00000003); // enable circular mode
+  Xil_Out32((VDMA0_BASEADDR + 0x05c), VIDEO_BASEADDR); // start address
+  Xil_Out32((VDMA0_BASEADDR + 0x060), (VIDEO_BASEADDR + V_ACTIVE*H_ACTIVE*4)); // start address
+  Xil_Out32((VDMA0_BASEADDR + 0x064), (VIDEO_BASEADDR + V_ACTIVE*H_ACTIVE*4*2)); // start address
+  Xil_Out32((VDMA0_BASEADDR + 0x058), (H_STRIDE*4)); // h offset (1920 * 4) bytes
+  Xil_Out32((VDMA0_BASEADDR + 0x054), (H_ACTIVE*4)); // h size (1920 * 4) bytes
+  Xil_Out32((VDMA0_BASEADDR + 0x050), V_ACTIVE); // v size (1080)
 
   Xil_Out32((CFV_BASEADDR + 0x08), ((H_WIDTH << 16) | H_COUNT));
   Xil_Out32((CFV_BASEADDR + 0x0c), ((H_DE_MIN << 16) | H_DE_MAX));
@@ -202,6 +204,27 @@ int main() {
   Xil_Out32((CFV_BASEADDR + 0x14), ((V_DE_MIN << 16) | V_DE_MAX));
   Xil_Out32((CFV_BASEADDR + 0x04), 0x00000000); // disable
   Xil_Out32((CFV_BASEADDR + 0x04), 0x00000001); // enable
+
+  Xil_Out32((VDMA1_BASEADDR + 0x030), 0x00000043); // enable circular mode, use tuser(0) for SOF
+  Xil_Out32((VDMA1_BASEADDR + 0x0ac), VIDEO_BASEADDR); // start address
+  Xil_Out32((VDMA1_BASEADDR + 0x0b0), (VIDEO_BASEADDR + V_ACTIVE*H_ACTIVE*4)); // start address
+  Xil_Out32((VDMA1_BASEADDR + 0x0b4), (VIDEO_BASEADDR + V_ACTIVE*H_ACTIVE*4*2)); // start address
+  Xil_Out32((VDMA1_BASEADDR + 0x0a8), (H_STRIDE*4)); // h offset (1920 * 4) bytes
+  Xil_Out32((VDMA1_BASEADDR + 0x0a4), (H_ACTIVE*4)); // h size (1920 * 4) bytes
+  Xil_Out32((VDMA1_BASEADDR + 0x0a0), V_ACTIVE); // v size (1080)
+
+//  Xil_Out32((TPG_BASEADDR + 0x100), 0x00000009); // color bar
+//  Xil_Out32((TPG_BASEADDR + 0x020), ((V_ACTIVE << 16) | H_ACTIVE)); // v size, h size
+//  Xil_Out32((TPG_BASEADDR + 0x000), 0x00000003); // enable
+
+  Xil_Out32((TPG_BASEADDR + 0x100), 0x000010EA);  // zplate with box enable
+  Xil_Out32((TPG_BASEADDR + 0x104), 0x0000000B);  // motion speed
+  Xil_Out32((TPG_BASEADDR + 0x020), ((V_ACTIVE << 16) | H_ACTIVE)); // v size, h size
+  Xil_Out32((TPG_BASEADDR + 0x10c), 0x0000004A);  // zplate h ctrl
+  Xil_Out32((TPG_BASEADDR + 0x110), 0x00000003);  // zplate v ctrl
+  Xil_Out32((TPG_BASEADDR + 0x114), 0x00000070);  // box size
+  Xil_Out32((TPG_BASEADDR + 0x118), 0x76543210);  // box color
+  Xil_Out32((TPG_BASEADDR + 0x000), 0x00000003);  // enable
 
 //  Xil_Out32((CFA_BASEADDR + 0x04), 0x040); // sample frequency
 //  Xil_Out32((CFA_BASEADDR + 0x00), 0x103); // clock ratio, data enable & signal enable
