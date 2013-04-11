@@ -190,7 +190,7 @@ int main() {
 
   iic_select(0x02);
 
-  Xil_Out32((VDMA0_BASEADDR + 0x000), 0x00000003); // enable circular mode
+  Xil_Out32((VDMA0_BASEADDR + 0x000), 0x0000000B); // enable circular mode
   Xil_Out32((VDMA0_BASEADDR + 0x05c), VIDEO_BASEADDR); // start address
   Xil_Out32((VDMA0_BASEADDR + 0x060), (VIDEO_BASEADDR + V_ACTIVE*H_ACTIVE*4)); // start address
   Xil_Out32((VDMA0_BASEADDR + 0x064), (VIDEO_BASEADDR + V_ACTIVE*H_ACTIVE*4*2)); // start address
@@ -205,7 +205,7 @@ int main() {
   Xil_Out32((CFV_BASEADDR + 0x04), 0x00000000); // disable
   Xil_Out32((CFV_BASEADDR + 0x04), 0x00000001); // enable
 
-  Xil_Out32((VDMA1_BASEADDR + 0x030), 0x00000043); // enable circular mode, use tuser(0) for SOF
+  Xil_Out32((VDMA1_BASEADDR + 0x030), 0x0000004B); // enable circular mode, use tuser(0) for SOF
   Xil_Out32((VDMA1_BASEADDR + 0x0ac), VIDEO_BASEADDR); // start address
   Xil_Out32((VDMA1_BASEADDR + 0x0b0), (VIDEO_BASEADDR + V_ACTIVE*H_ACTIVE*4)); // start address
   Xil_Out32((VDMA1_BASEADDR + 0x0b4), (VIDEO_BASEADDR + V_ACTIVE*H_ACTIVE*4*2)); // start address

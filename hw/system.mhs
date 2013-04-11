@@ -162,7 +162,7 @@ BEGIN axi_vdma
  PARAMETER C_BASEADDR = 0x43000000
  PARAMETER C_HIGHADDR = 0x4300ffff
  PARAMETER C_INTERCONNECT_S_AXI_LITE_MASTERS = processing_system7_0.M_AXI_GP0
- PARAMETER C_MM2S_GENLOCK_MODE = 3
+ PARAMETER C_MM2S_GENLOCK_MODE = 1
  BUS_INTERFACE S_AXI_LITE = axi_interconnect_gp0
  BUS_INTERFACE M_AXI_MM2S = axi_interconnect_hp0
  BUS_INTERFACE M_AXIS_MM2S = axi_vdma_0_M_AXIS_MM2S
@@ -175,7 +175,6 @@ BEGIN axi_vdma
  PORT m_axi_mm2s_aclk = clk_150mhz
  PORT mm2s_introut = axi_vdma_0_mm2s_introut
  PORT mm2s_frame_ptr_in = axi_vdma_1_s2mm_frame_ptr_out
- PORT mm2s_frame_ptr_out = axi_vdma_0_mm2s_frame_ptr_out
 END
 
 BEGIN axi_hdmi_tx_16b
@@ -198,8 +197,6 @@ BEGIN axi_hdmi_tx_16b
  PORT vdma_fs_ret = axi_vdma_0_mm2s_fsync_out
  PORT vdma_empty = axi_vdma_0_mm2s_buffer_empty
  PORT vdma_almost_empty = axi_vdma_0_mm2s_buffer_almost_empty
- PORT debug_data = axi_hdmi_tx_16b_0_debug_data
- PORT debug_trigger = axi_hdmi_tx_16b_0_debug_trigger
 END
 
 BEGIN axi_clkgen
@@ -245,7 +242,7 @@ BEGIN axi_vdma
  PARAMETER C_INTERCONNECT_M_AXI_S2MM_WRITE_ISSUING = 8
  PARAMETER C_INTERCONNECT_M_AXI_S2MM_WRITE_FIFO_DELAY = 1
  PARAMETER C_INTERCONNECT_S_AXI_LITE_MASTERS = processing_system7_0.M_AXI_GP0
- PARAMETER C_S2MM_GENLOCK_MODE = 2
+ PARAMETER C_S2MM_GENLOCK_MODE = 0
  BUS_INTERFACE S_AXI_LITE = axi_interconnect_gp0
  BUS_INTERFACE M_AXI_S2MM = axi_interconnect_hp2
  BUS_INTERFACE S_AXIS_S2MM = axis_vremapper_0_M_AXIS
@@ -254,7 +251,6 @@ BEGIN axi_vdma
  PORT s_axis_s2mm_aclk = clk_150mhz
  PORT s2mm_introut = axi_vdma_1_s2mm_introut
  PORT s2mm_frame_ptr_out = axi_vdma_1_s2mm_frame_ptr_out
- PORT s2mm_frame_ptr_in = axi_vdma_0_mm2s_frame_ptr_out
 END
 
 BEGIN v_tpg
@@ -285,25 +281,5 @@ BEGIN axis_vremapper
  PARAMETER C_M3_CONSTANT_VALUE = 0xFF
  BUS_INTERFACE M_AXIS = axis_vremapper_0_M_AXIS
  BUS_INTERFACE S_AXIS = v_tpg_0_M_AXIS_VIDEO
-END
-
-BEGIN chipscope_ila
- PARAMETER INSTANCE = chipscope_ila_0
- PARAMETER HW_VER = 1.05.a
- PARAMETER C_TRIG0_TRIGGER_IN_WIDTH = 8
- PARAMETER C_TRIG0_UNIT_MATCH_TYPE = basic with edges
- PARAMETER C_DATA_SAME_AS_TRIGGER = 0
- PARAMETER C_DATA_IN_WIDTH = 64
- PARAMETER C_NUM_DATA_SAMPLES = 8192
- PORT CHIPSCOPE_ILA_CONTROL = chipscope_icon_0_control0
- PORT TRIG0 = axi_hdmi_tx_16b_0_debug_trigger
- PORT DATA = axi_hdmi_tx_16b_0_debug_data
- PORT CLK = clk_150mhz
-END
-
-BEGIN chipscope_icon
- PARAMETER INSTANCE = chipscope_icon_0
- PARAMETER HW_VER = 1.06.a
- PORT control0 = chipscope_icon_0_control0
 END
 
